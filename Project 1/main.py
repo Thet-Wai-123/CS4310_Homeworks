@@ -13,16 +13,19 @@ class Job:
         self.length = length
 
 def parse_file(filename):
-    dir = os.path.dirname(os.path.abspath(__file__))
-    filepath = os.path.join(dir, filename)
-    jobs = []
-    with open(filepath, 'r') as file:
-        lines = file.read().strip().split('\n')
-        for i in range(0, len(lines), 2):
-            name = lines[i]
-            length = int(lines[i + 1])
-            jobs.append(Job(name, length))
-    return jobs
+    try:
+        dir = os.path.dirname(os.path.abspath(__file__))
+        filepath = os.path.join(dir, filename)
+        jobs = []
+        with open(filepath, 'r') as file:
+            lines = file.read().strip().split('\n')
+            for i in range(0, len(lines), 2):
+                name = lines[i]
+                length = int(lines[i + 1])
+                jobs.append(Job(name, length))
+        return jobs
+    except FileNotFoundError:
+        return False
 
 # results can be stored in this format: [(job_name, start_time, end_time, completed), ...]
 def print_table(results):
@@ -46,8 +49,19 @@ def main():
     # Part 1 and 2 - used a generator to genereate the files
     print("PART 1 and 2 - testing algorithmns with 5, 10, and 15 jobs")
     first_test_job = parse_file("5_jobs.txt")
+    if not first_test_job:
+        generate_new_jobs(5)
+        first_test_job = parse_file("job.txt")
+
     second_test_job = parse_file("10_jobs.txt")
+    if not first_test_job:
+        generate_new_jobs(10)
+        first_test_job = parse_file("job.txt")
+
     third_test_job = parse_file("15_jobs.txt")
+    if not first_test_job:
+        generate_new_jobs(15)
+        first_test_job = parse_file("job.txt")
 
     # First Come First Serve Algo
     print("----- FCFS -----")
